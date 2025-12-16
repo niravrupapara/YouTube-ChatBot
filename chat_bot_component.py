@@ -96,7 +96,7 @@ def generate_prompt(retrieved_docs , question):
     , input_variables=['context', 'question']
     )
 
-    prompt = template.invoke({'context':retrieved_docs , 'question':question})
+    prompt = template.invoke({'context':context , 'question':question})
     return prompt
 
 
@@ -108,6 +108,21 @@ def generate_answer(llm, prompt):
     return response
 
 
+def generate_transcript_summary(transcript_text: str):
+    llm = load_llm()
+
+    summary_prompt = f"""
+You are a helpful assistant.
+Summarize the following YouTube video transcript in a clear and concise way.
+
+Transcript:
+{transcript_text}
+
+Summary:
+"""
+
+    response = llm.invoke(summary_prompt)
+    return response.content
 
 
 def run_youtube_chatbot(youtube_url: str, question: str):
@@ -127,4 +142,5 @@ def run_youtube_chatbot(youtube_url: str, question: str):
     model = load_llm()
     answer = generate_answer(model , prompt)
 
-    return answer.content
+    return answer.content, transcript_text
+
