@@ -101,7 +101,7 @@ def generate_prompt(retrieved_docs , question):
 
 
 
-def generate_answer(llm, prompt):
+def generate_response(llm, prompt):
    
 
     response = llm.invoke(prompt)
@@ -159,3 +159,23 @@ def get_video_transcript(url : str) -> str:
     return transcript_text
 
 
+def answer_from_transcript(transcript_text : str , question : str) -> str:
+
+    documents = split_text(transcript_text)
+
+    vector_store = create_vector_store(documents)
+
+    retriever = get_retriever(vector_store)
+
+    retrieved_docs = retriever.invoke(question)
+
+    prompt = generate_prompt(retrieved_docs , question)
+
+    model = load_llm()
+
+    response = generate_response(model , prompt)
+
+    answer = response.content
+    
+
+    return ans
