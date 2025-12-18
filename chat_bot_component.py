@@ -159,4 +159,4 @@ def answer_from_transcript(transcript_text : str , question : str) -> str:
     answer = response.content
     
 
-    return ans
+    return answer

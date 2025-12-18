@@ -1,59 +1,38 @@
 import streamlit as st
-from chat_bot_component import run_youtube_chatbot
-from chat_bot_component import generate_transcript_summary
-
+from chat_bot_component import get_video_transcript , answer_from_transcript
 st.set_page_config(
-    page_title="YouTube ChatBot",
-    page_icon="🎥",
-    layout="centered"
+    page_title="Youtube Chatbot" , 
+    page_icon="🎥" , 
+    layout='centered'
 )
 
 st.title("🎥 YouTube Video ChatBot")
-st.write("Ask questions about any YouTube video using AI.")
 
-# Input fields
-youtube_url = st.text_input(
-    "Enter YouTube Video URL",
-    placeholder="https://youtu.be/..."
-)
+st.write("this app will let chat with any youtube video")
 
-question = st.text_area(
-    "Ask a question about the video",
-    placeholder="What is this video about?"
-)
 
-# Button
+youtube_url = st.text_input("Enter YouTube Video URL" , placeholder="https://youtu.be/xxxxxxxxxxx")
+
+question = st.text_area("Ask a question about this video" , placeholder="What is this video about?")
+
+
 if st.button("Get Answer"):
-    if not youtube_url or not question:
-        st.warning("Please enter both YouTube URL and question.")
-    else:
-        with st.spinner("Processing video and generating answer..."):
-            try:
-                answer = run_youtube_chatbot(youtube_url, question)
-                st.success("Answer generated!")
-                st.markdown("### ✅ Answer")
-                st.write(answer)
-            except Exception as e:
-                st.error(f"Error: {e}")
-
-st.markdown("---")
-st.subheader("📄 Transcript Summary")
-
-if st.button("Generate Transcript Summary"):
     if not youtube_url:
-        st.warning("Please enter a YouTube video URL first.")
-    else:
-        with st.spinner("Generating transcript summary..."):
+        st.warning("Please Enter youtube URL")
+
+    elif not question:
+        st.warning("Please Enter Question")
+    else :
+        with st.spinner("Processing vieo and generating answer..."):
             try:
-                _, transcript = run_youtube_chatbot(
-                    youtube_url,
-                    "Summarize the video"
-                )
+                transcript = get_video_transcript(youtube_url)
+                answer = answer_from_transcript(transcript , question)
 
-                summary = generate_transcript_summary(transcript)
+                st.success("Answer Generated")
 
-                st.success("Summary generated!")
-                st.write(summary)
+                st.markdown("Answer")
+
+                st.write(answer)
 
             except Exception as e:
-                st.error(f"Error: {e}")
+                st.error(f"Error {e}")
