@@ -125,25 +125,6 @@ Summary:
     return response.content
 
 
-def run_youtube_chatbot(youtube_url: str, question: str):
-    video_id = extract_video_id(youtube_url)
-
-    transcript_text = load_youtube_transcript(video_id)
-
-    documents = split_text(transcript_text)
-
-    vector_store = create_vector_store(documents)
-
-    retriever = get_retriever(vector_store)
-
-    retrieved_docs = retriever.invoke(question)
-
-    prompt = generate_prompt(retrieved_docs , question)
-    model = load_llm()
-    answer = generate_answer(model , prompt)
-
-    return answer.content, transcript_text
-
 
 
 
