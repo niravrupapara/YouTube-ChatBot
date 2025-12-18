@@ -144,3 +144,18 @@ def run_youtube_chatbot(youtube_url: str, question: str):
 
     return answer.content, transcript_text
 
+
+
+
+
+def get_video_transcript(url : str) -> str:
+    """
+   Extracts video ID and returns full transcript text
+    """
+
+    video_id = extract_video_id(url)
+    transcript_text = load_youtube_transcript(video_id)
+
+    return transcript_text
+
+
