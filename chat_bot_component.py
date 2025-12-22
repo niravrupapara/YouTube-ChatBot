@@ -4,6 +4,11 @@ from youtube_transcript_api import YouTubeTranscriptApi
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 
+from mistralai import Mistral
+
+import os
+
+
 from langchain_community.vectorstores import FAISS
 
 from langchain_core.prompts import PromptTemplate
@@ -65,15 +70,19 @@ def get_retriever(vector_store):
     )
 
 
-def load_llm():
-    llm_endpoint = HuggingFaceEndpoint(
-        repo_id="mistralai/Mistral-7B-Instruct-v0.2",
-        temperature=0,
-        max_new_tokens=512
+MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
+MISTRAL_MODEL = os.getenv("MISTRAL_MODEL")
+client = Mistral(api_key=MISTRAL_API_KEY)
+def generate_llm_response(prompt: str) -> str:
+    response = client.chat.complete(
+        model=MISTRAL_MODEL,
+        messages=[
+            {"role": "user", "content": prompt}
+        ],
+        temperature=0.2,
+        max_tokens=512
     )
-
-    chat_model = ChatHuggingFace(llm=llm_endpoint)
-    return chat_model
+    return response.choices[0].message.content
 
 
 
@@ -101,15 +110,10 @@ def generate_prompt(retrieved_docs , question):
 
 
 
-def generate_response(llm, prompt):
-   
-
-    response = llm.invoke(prompt)
-    return response
 
 
 def generate_transcript_summary(transcript_text: str):
-    llm = load_llm()
+
 
     summary_prompt = f"""
 You are a helpful assistant.
@@ -120,9 +124,9 @@ Transcript:
 
 Summary:
 """
+    return generate_llm_response(summary_prompt)
 
-    response = llm.invoke(summary_prompt)
-    return response.content
+    
 
 
 
@@ -152,11 +156,8 @@ def answer_from_transcript(transcript_text : str , question : str) -> str:
 
     prompt = generate_prompt(retrieved_docs , question)
 
-    model = load_llm()
+    answer = generate_llm_response(prompt)
 
-    response = generate_response(model , prompt)
-
-    answer = response.content
     
 
     return answer
