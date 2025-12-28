@@ -1,2 +1,23 @@
-numpy
-pandas 
+streamlit
+
+# Mistral AI
+mistralai
+
+# LangChain core & utilities
+langchain
+langchain-core
+langchain-community
+langchain-text-splitters
+
+# HuggingFace embeddings
+langchain-huggingface
+sentence-transformers
+
+# Vector database
+faiss-cpu
+
+# YouTube transcript
+youtube-transcript-api
+
+# Environment variables
+python-dotenv
