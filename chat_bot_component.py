@@ -19,8 +19,8 @@ load_dotenv()
 from langchain_huggingface import HuggingFaceEndpoint , ChatHuggingFace
 
 EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"
-CHUNK_SIZE = 1000
-CHUNK_OVERLAP = 200
+CHUNK_SIZE = 800
+CHUNK_OVERLAP = 150
 TOP_K = 3
 
 
@@ -49,7 +49,8 @@ def load_youtube_transcript(video_id: str) -> str:
 def split_text(text: str):
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=CHUNK_SIZE,
-        chunk_overlap=CHUNK_OVERLAP
+        chunk_overlap=CHUNK_OVERLAP , 
+        separators=["\n\n", "\n", ".", " ", ""]
     )
     return splitter.create_documents([text])
 
@@ -65,7 +66,7 @@ def create_vector_store(documents):
 
 def get_retriever(vector_store):
     return vector_store.as_retriever(
-        search_type="similarity",
+        search_type="mmr",
         search_kwargs={"k": TOP_K}
     )
 
