@@ -71,5 +71,5 @@ with col2:
                 st.markdown(f'<div class="summary-box">{st.session_state.summary}</div>' , unsafe_allow_html=True)
 
 
-    
-
+    if question_button:
+        pass   
