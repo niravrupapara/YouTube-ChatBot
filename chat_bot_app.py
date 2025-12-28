@@ -7,52 +7,69 @@ if "transcript" not in st.session_state:
 if "summary" not in st.session_state:
     st.session_state.summary = None
 
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
+
+if "video_url" not in st.session_state:
+    st.session_state.video_url = None
+
 
 st.set_page_config(
     page_title="Youtube Chatbot" , 
     page_icon="🎥" , 
-    layout='centered'
+    layout='wide' ,
+    initial_sidebar_state='collapsed'
 )
 
-st.title("🎥 YouTube Video ChatBot")
+def load_css(file_name: str):
+    with open(file_name) as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-st.write("this app will let chat with any youtube video")
+load_css("style.css")
 
-
-youtube_url = st.text_input("Enter YouTube Video URL" , placeholder="https://youtu.be/xxxxxxxxxxx")
-
-if st.button("generate Summary"):
-    if not youtube_url:
-        st.warning("please Enter Youtube Link")
-    else:
-         with st.spinner("Fetching Transcript and Generating Summary"):
-             transcript = get_video_transcript(youtube_url)
-             summary = generate_transcript_summary(transcript)
-
-             st.session_state.transcript = transcript
-             st.session_state.summary = summary
-
-if st.session_state.summary:
-    st.subheader("📄 Video Summary")
-    st.write(st.session_state.summary)
+st.markdown('<h1 class="main-header">🎥 YouTube Video ChatBot</h1>' , unsafe_allow_html=True)
+st.markdown('<p class="subtitle">Chat with any YouTube Video Transcript</p>' , unsafe_allow_html=True)
+col1 , col2 , col3 = st.columns([1,2,1])
 
 
-if st.session_state.summary:
-    st.subheader("💬 Ask a Question")
 
-    user_question = st.text_input(
-        "Enter your question about the video"
-    )
 
-    if st.button("Ask Question"):
-        if not user_question:
-            st.warning("Please enter a question")
+
+with col2:
+
+    st.markdown("### Enter YouTube Video URL")
+    youtube_url = st.text_input(
+        "Enter YouTube Video URL" , 
+        placeholder="https://www.youtube.com/watch?v=... or https://youtu.be/..." ,
+        label_visibility="collapsed",
+        key="youtube_url_input")
+    
+    col_button1 , col_button2  = st.columns([2,1])
+
+    with col_button1:
+        summary_button = st.button("Generate Summary" , key="generate_summary_button" , use_container_width=True)
+
+    with col_button2:
+        question_button = st.button("Ask Question" , key="ask_question_button" , use_container_width=True)
+
+
+
+    if summary_button:
+        if not youtube_url:
+            st.warning("Please enter a YouTube link")
         else:
-            with st.spinner("Thinking..."):
-                answer = answer_from_transcript(
-                    st.session_state.transcript,
-                    user_question
-                )
+            with st.spinner("Fetching Transcript and Generating Summary..."):
+                transcript = get_video_transcript(youtube_url)
+                summary = generate_transcript_summary(transcript)
 
-                st.subheader("✅ Answer")
-                st.write(answer)
+                st.session_state.transcript = transcript
+                st.session_state.summary = summary 
+                st.session_state.video_url = youtube_url
+                st.success("Summary Generated Successfully!")
+
+                st.markdown("### 📄 Video Summary")
+                st.markdown(f'<div class="summary-box">{st.session_state.summary}</div>' , unsafe_allow_html=True)
+
+
+    
+
