@@ -13,6 +13,9 @@ if "chat_history" not in st.session_state:
 if "video_url" not in st.session_state:
     st.session_state.video_url = None
 
+if "show_question_input" not in st.session_state:
+    st.session_state.show_question_input = False
+
 
 st.set_page_config(
     page_title="Youtube Chatbot" , 
@@ -72,4 +75,42 @@ with col2:
 
 
     if question_button:
-        pass   
+        st.session_state.show_question_input = True
+
+    if st.session_state.show_question_input:
+        if not st.session_state.transcript:
+            if not youtube_url:
+                st.warning("Please enter a YouTube link")
+            else:
+                with st.spinner("Fetching Transcript..."):
+                    st.session_state.transcript = get_video_transcript(youtube_url)
+
+        
+        st.markdown("### ❓ Ask a Question")
+
+        user_question = st.text_input(
+                    "Enter your question about the video transcript" ,
+                    placeholder="Type your question here..." ,
+                    label_visibility="collapsed")
+                
+        submit_question = st.button("Submit Question" , key="submit_question_button")
+
+        if submit_question:
+                if not user_question:
+                        st.warning("Please enter a question.")
+                else:
+                    with st.spinner("Generating Answer..."):
+                            answer = answer_from_transcript(st.session_state.transcript , user_question)
+                            # st.session_state.chat_history.append((user_question , answer))  
+                    st.success("Answer Generated Successfully!")
+                    st.markdown("### 💬 Chat History")
+                    st.markdown("#### Your Question:")
+                    st.write(user_question)
+
+                    st.markdown("#### Answer:")
+                    st.markdown(
+                            f'<div class="summary-box">{answer}</div>',
+                            unsafe_allow_html=True
+                        )
+
+

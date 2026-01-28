@@ -74,6 +74,8 @@ def get_retriever(vector_store):
 MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
 MISTRAL_MODEL = os.getenv("MISTRAL_MODEL")
 client = Mistral(api_key=MISTRAL_API_KEY)
+
+
 def generate_llm_response(prompt: str) -> str:
     response = client.chat.complete(
         model=MISTRAL_MODEL,
@@ -106,7 +108,7 @@ def generate_prompt(retrieved_docs , question):
     , input_variables=['context', 'question']
     )
 
-    prompt = template.invoke({'context':context , 'question':question})
+    prompt = template.format(context=context, question=question)
     return prompt
 
 

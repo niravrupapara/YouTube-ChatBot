@@ -1,13 +1,20 @@
 .main-header {
     text-align: center;
     padding: 2rem 0;
-    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+
+    background: radial-gradient(
+        ellipse at center,
+        #60a5fa 0%,   /* light blue */
+        #4f46e5 45%,  /* indigo */
+        #7c3aed 100%  /* purple */
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-size: 3rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
 }
+
 
 
 .subtitle {
@@ -17,25 +24,40 @@
     margin-bottom: 2rem;
 }
 
-.summary-box {
+/* .summary-box {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     padding: 1.5rem;
     border-radius: 15px;
     color: white;
     margin: 1rem 0;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
+} */
+.summary-box {
+        background-color: #f0f2f6;
+        padding: 1.5rem;
+        border-radius: 10px;
+        border-left: 4px solid #FF0000;
+    }
 
 .stButton > button {
     width: 100%;
-    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 25px;
+    padding: 0.75rem 1.6rem;
+    border-radius: 999px;
     font-weight: 600;
-    transition: all 0.3s ease;
+    cursor: pointer;
+
+    background: radial-gradient(
+        ellipse at left center,
+        #ff7a7a 0%,   /* soft coral red */
+        #ff3b3b 55%,  /* YouTube red */
+        #cc0000 100%  /* deep red */
+    );
+
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
 
 .stButton > button:hover {
     transform: translateY(-2x);
